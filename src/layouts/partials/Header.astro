@@ -5,6 +5,7 @@ import menu from "@/config/menu.json";
 import "@/partials/style.css";
 
 
+
 const { main } = menu;
 const { pathname } = Astro.url;
 ---
@@ -117,7 +118,7 @@ const { pathname } = Astro.url;
   </nav>
 </header>
 
-<script type="module"  src="/src/scripts/translate.js"></script>
+<script type="module"  src="../../scripts/translate.js"></script>
 
 <script is:inline>
   document.querySelectorAll(".nav-link").forEach((link) => {
