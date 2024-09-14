@@ -1,16 +1,13 @@
 ---
 // Importing components and configuration
+// Importing components and configuration
 import Logo from "@/components/Logo.astro";
 import menu from "@/config/menu.json";
 import "@/partials/style.css";
 
-
-
 const { main } = menu;
 const { pathname } = Astro.url;
 ---
-
-
 
 <header class="header">
   <nav class="navbar container">
@@ -103,9 +100,10 @@ const { pathname } = Astro.url;
       </li>
     </ul>
 
-    <div class="order-1 ml-auto hidden items-center md:order-2 md:ml-0 lg:flex lg:space-x-2">
-      <!-- Language selector -->
-      <select class="language-selector" aria-label="Select Language">
+    <!-- Language selector for mobile and desktop -->
+    <div class="order-1 ml-auto flex items-center md:order-2 md:ml-0 lg:flex lg:space-x-2">
+      <!-- Language selector (visible on all screens) -->
+      <select class="language-selector block lg:hidden w-full px-4 py-2 border border-gray-300 rounded-md" aria-label="Select Language">
         <option value="en">English</option>
         <option value="ar">Arabic</option>
         <option value="fr">French</option>
@@ -121,7 +119,7 @@ const { pathname } = Astro.url;
 <script >
   document.addEventListener('DOMContentLoaded', async () => {
     const getTranslationsUrl = (lang) => `/locales/${lang}.json`;
-  
+
     const applyTranslations = (translations) => {
       document.querySelectorAll('[data-translate]').forEach(el => {
         const key = el.getAttribute('data-translate');
@@ -129,14 +127,14 @@ const { pathname } = Astro.url;
         el.textContent = translation;
       });
     };
-  
+
     const storedLanguage = localStorage.getItem('selectedLanguage') || 'en';
     const response = await fetch(getTranslationsUrl(storedLanguage));
     const translations = await response.json();
     applyTranslations(translations);
-  
+
     document.querySelector('.language-selector').value = storedLanguage;
-  
+
     document.querySelector('.language-selector').addEventListener('change', async (event) => {
       const selectedLanguage = event.target.value;
       localStorage.setItem('selectedLanguage', selectedLanguage);
@@ -145,7 +143,6 @@ const { pathname } = Astro.url;
       applyTranslations(newTranslations);
     });
   });
-  
 </script>
 
 <script is:inline>
