@@ -1,6 +1,4 @@
 ---
-// Importing components and configuration
-// Importing components and configuration
 import Logo from "@/components/Logo.astro";
 import menu from "@/config/menu.json";
 import "@/partials/style.css";
@@ -100,18 +98,16 @@ const { pathname } = Astro.url;
       </li>
     </ul>
 
-    <!-- Language selector for mobile and desktop -->
-    <div class="order-1 ml-auto flex items-center md:order-2 md:ml-0 lg:flex lg:space-x-2">
-      <!-- Language selector (visible on all screens) -->
-      <select class="language-selector block lg:hidden w-full px-4 py-2 border border-gray-300 rounded-md" aria-label="Select Language">
+    <!-- Language selector (visible on all screens) -->
+    <div class="order-1 ml-auto flex items-center md:order-2 md:ml-0 lg:space-x-2">
+      <!-- Language selector -->
+      <select class="language-selector block px-4 py-2 border border-gray-300 rounded-md lg:w-auto w-full" aria-label="Select Language">
         <option value="en">English</option>
         <option value="ar">Arabic</option>
         <option value="fr">French</option>
         <option value="de">German</option>
       </select>
-      <a class="btn btn-white btn-sm" href="/getstarted">
-        <span data-translate="Get Started Now">Get Started Now</span>
-      </a>
+     
     </div>
   </nav>
 </header>
