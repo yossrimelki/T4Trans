@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const getTranslationsUrl = (lang) => `/locales/${lang}.json`;
+    const getTranslationsUrl = (lang) => `/src/locales/${lang}.json`;
   
     const applyTranslations = (translations) => {
       document.querySelectorAll('[data-translate]').forEach(el => {
