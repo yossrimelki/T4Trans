@@ -39,7 +39,7 @@ const page_data = {
           </div>
         </div>
         <div class="md:col-6 md:order-1">
-          <form
+          <form id="contact-form"
             class="lg:max-w-[484px]"
             action={contact_form_action}
             method="POST"
@@ -53,9 +53,6 @@ const page_data = {
                 <option data-translate="Organization" value="organization">{markdownify("Organization")}</option>
                 <option data-translate="Education" value="education">{markdownify("Education")}</option>
                 <option data-translate="Media" value="media">{markdownify("Media")}</option>
-                
-                
-                
                 <option data-translate="Legal&Business" value="legal-business">{markdownify("Legal & Business")}</option>
                 <option data-translate="Science & Technology" value="science-technology">{markdownify("Science & Technology")}</option>
               </select>
@@ -67,9 +64,28 @@ const page_data = {
                 <option data-translate="Document" value="documents">{markdownify("Document")}</option>
                 <option data-translate="Interpretation" value="interpretation">{markdownify("Interpretation")}</option>
                 <option data-translate="Localization" value="localization">{markdownify("Localization")}</option>
-                <option data-translate="Sign Language"  value="sign-language">{markdownify("Sign Language")}</option>
+                <option data-translate="Sign Language" value="sign-language">{markdownify("Sign Language")}</option>
                 <option data-translate="Authentication" value="authentication">{markdownify("Authentication")}</option>
               </select>
+            </div>
+            <div class="form-group mb-5">
+              <label data-translate="Languages" class="form-label" for="reason">{markdownify("Languages")}</label>
+              <select name="fromlanguage" id="fromlanguage" class="form-select" required>
+                <option data-translate="From Languages" value="">{markdownify("From Languages")}</option>
+                <option data-translate="arabic" value="arabic">{markdownify("arabic")}</option>
+                <option data-translate="English" value="English">{markdownify("English")}</option>
+                <option data-translate="Frensh" value="Frensh">{markdownify("Frensh")}</option>
+                <option data-translate="Deutsh" value="Deutsh">{markdownify("Deutsh")}</option>
+                </select>
+            </div>
+            <div class="form-group mb-5">
+              <select name="tolanguage" id="tolanguage" class="form-select" required>
+                <option data-translate="To Language" value="">{markdownify("To Languages")}</option>
+                <option data-translate="arabic" value="arabic">{markdownify("arabic")}</option>
+                <option data-translate="English" value="English">{markdownify("English")}</option>
+                <option data-translate="Frensh" value="Frensh">{markdownify("Frensh")}</option>
+                <option data-translate="Deutsh" value="Deutsh">{markdownify("Deutsh")}</option>
+                </select>
             </div>
             <div class="form-group mb-5">
               <label data-translate="Full Name" class="form-label" for="name">{markdownify("Full Name")}</label>
@@ -83,12 +99,12 @@ const page_data = {
               />
             </div>
             <div class="form-group mb-5">
-              <label data-translate="Email Addres" class="form-label" for="email">{markdownify("Email Addres")}s</label>
+              <label data-translate="Email Address" class="form-label" for="email">{markdownify("Email Address")}</label>
               <input
                 class="form-control"
                 type="email"
-                id="email"
-                name="email"
+                id="to"
+                name="to"
                 placeholder="Your Email Address"
                 required
               />
@@ -98,7 +114,7 @@ const page_data = {
               <textarea
                 class="form-control h-[150px]"
                 id="message"
-                name="message"
+                name="text"
                 cols="30"
                 rows="10"
                 required
@@ -111,7 +127,7 @@ const page_data = {
                   class="file-upload-input"
                   type="file"
                   id="file"
-                  name="file"
+                  name="attachments"
                   multiple
                   hidden
                 />
@@ -166,11 +182,38 @@ const page_data = {
 </style>
 
 <script>
-  const fileInput = document.getElementById('file');
-  const fileChosen = document.getElementById('file-chosen');
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('file');
+    const fileChosen = document.getElementById('file-chosen');
 
-  fileInput.addEventListener('change', function(){
-    const fileNames = Array.from(this.files).map(file => file.name).join(', ');
-    fileChosen.textContent = fileNames || 'No file chosen';
+    fileInput.addEventListener('change', function() {
+      const fileNames = Array.from(this.files).map(file => file.name).join(', ');
+      fileChosen.textContent = fileNames || 'No file chosen';
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', async function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const formData = new FormData(this); // Collect all form data, including files
+
+      try {
+        const response = await fetch('http://localhost:3000/api/email/send', {
+          method: 'POST',
+          body: formData // Send form data to the API
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          alert('Proposal submitted successfully!');
+          form.reset(); // Clear form fields
+          fileChosen.textContent = 'No file chosen'; // Reset file input label
+        } else {
+          const error = await response.json();
+          alert('Failed to submit proposal: ' + error.message);
+        }
+      } catch (error) {
+        alert('An error occurred: ' + error.message);
+      }
+    });
   });
 </script>
