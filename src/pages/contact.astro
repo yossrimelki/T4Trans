@@ -37,67 +37,97 @@ const page_data = {
               width={500}
               alt=""
             />
-            
           </div>
         </div>
         <div class="md:col-6 md:order-1">
           <form
-          class="lg:max-w-[484px]"
-          action="/api/send-mail"
-          method="POST"
-        >
-          <div class="form-group mb-5">
-            <label data-translate="Reason/Purpose" class="form-label" for="reason">{markdownify("Reason/Purpose")}</label>
-            <select name="reason" id="reason" class="form-select" required>
-              <option data-translate="Reason/Purpose" value="">{markdownify("Select reason/purpose")}</option>
-              <option data-translate="Reclamation" value="Reclamation">{markdownify("Reclamation")}</option>
-              <option data-translate="Asking" value="Asking">{markdownify("Asking")}</option>
-              <option data-translate="Other" value="Other">{markdownify("Other")}</option>
-            </select>
-          </div>
-          <div class="form-group mb-5">
-            <label data-translate="Full Name" class="form-label" for="name">{markdownify("Full Name")}</label>
+            id="contact-form"
+            name="contact-form"
+            class="lg:max-w-[484px]"
+            action={contact_form_action}
+            method="POST"
+          >
+            <div class="form-group mb-5">
+              <label class="form-label" for="reason">Reason/Purpose</label>
+              <select name="reason" id="reason" class="form-select" required>
+                <option value="" disabled selected>Select reason/purpose</option>
+                <option value="Reclamation">Reclamation</option>
+                <option value="Asking">Asking</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group mb-5">
+              <label class="form-label" for="name">Full Name</label>
+              <input
+                class="form-control"
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Your Full Name"
+                required
+              />
+            </div>
+            <div class="form-group mb-5">
+              <label class="form-label" for="to">Email Address</label>
+              <input
+                class="form-control"
+                type="email"
+                name="to"
+                id="to"
+                placeholder="Your Email Address"
+                required
+              />
+            </div>
+            <div class="form-group mb-5">
+              <label class="form-label" for="message">Message</label>
+              <textarea
+                class="form-control h-[150px]"
+                name="text"
+                id="text"
+                cols="30"
+                rows="10"
+                required
+              ></textarea>
+            </div>
             <input
-              class="form-control"
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Your Full Name"
-              required
+              class="btn btn-primary block w-full"
+              type="submit"
+              value="Send Message"
             />
-          </div>
-          <div class="form-group mb-5">
-            <label data-translate="Email Address" class="form-label" for="email">{markdownify("Email Address")}</label>
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Your Email Address"
-              required
-            />
-          </div>
-          <div class="form-group mb-5">
-            <label data-translate="Message" class="form-label" for="message">{markdownify("Message")}</label>
-            <textarea
-              class="form-control h-[150px]"
-              name="message"
-              id="message"
-              cols="30"
-              rows="10"
-              required
-            ></textarea>
-          </div>
-          <input data-translate="Send Message"
-            class="btn btn-primary block w-full"
-            type="submit"
-            value="Send Message"
-          />
-        </form>
-        
-
+          </form>
         </div>
       </div>
     </div>
   </section>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+  
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+        const response = await fetch('http://localhost:3000/api/email/sendr', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          alert('Reclamation submitted successfully!');
+          document.getElementById('contact-form').reset();
+        } else {
+          const error = await response.json();
+          alert('Failed to submit reclamation: ' + error.message);
+        }
+      } catch (error) {
+        alert('An error occurred: ' + error.message);
+      }
+    });
+  </script>
+  
 </Base>
